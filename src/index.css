@@ -16,6 +16,11 @@ body {
   cursor: none;
 }
 
+/* Force hide system cursor on EVERYTHING to prevent 'finger' */
+* {
+  cursor: none !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
