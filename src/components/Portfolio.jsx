@@ -91,7 +91,7 @@ const Portfolio = () => {
                     <div className={`relative w-full aspect-[9/18] transition-transform duration-500 hover:scale-105 hover:z-20 hover:rotate-0 ${rotation}`}>
                       {/* Phone Frame Image */}
                       <div
-                        className="absolute inset-0 bg-no-repeat bg-contain bg-center pointer-events-none z-20"
+                        className="absolute top-[0%] left-[0%] bottom-[0%] scale-[2] right-[0%] bg-no-repeat -rotate-90 bg-contain bg-center pointer-events-none z-20"
                         style={{ backgroundImage: 'url("/images/frame.png")' }}
                       />
 

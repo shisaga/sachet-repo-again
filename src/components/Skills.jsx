@@ -13,6 +13,38 @@ const Skills = () => {
 
   return (
     <section id="skills" className="relative py-40 bg-primary overflow-hidden px-6 border-t-4 border-black">
+      {/* Fly Icon */}
+      <motion.img
+        src="/images/fly.png"
+        alt="Paper Plane"
+        className="absolute top-10 right-10 w-24 md:w-32 z-10 pointer-events-none"
+        animate={{
+          x: [0, 20, 0],
+          y: [0, -20, 0],
+          rotate: [0, 5, 0]
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      {/* Fly Icon */}
+      <motion.img
+        src="/images/fly.png"
+        alt="Paper Plane"
+        className="absolute top-10 right-10 w-24 md:w-32 z-10 pointer-events-none"
+        animate={{
+          x: [0, 20, 0],
+          y: [0, -20, 0],
+          rotate: [0, 5, 0]
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
       <div className="max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-24 items-center">
           {/* Left: Content */}
