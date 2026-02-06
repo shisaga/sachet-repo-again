@@ -9,10 +9,12 @@ import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { Toaster } from "./components/ui/sonner";
+import CustomCursor from "./components/CustomCursor";
 
 const Home = () => {
   return (
-    <div className="bg-white">
+    <div className="bg-black/95">
+      <CustomCursor />
       <Header />
       <Hero />
       <About />
@@ -26,7 +28,7 @@ const Home = () => {
 
 function App() {
   return (
-    <div className="App">
+    <div className="App cursor-none">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />

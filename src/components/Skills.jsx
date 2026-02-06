@@ -1,13 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { skills } from '../mock';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion } from 'framer-motion';
 
 const Skills = () => {
-  const sectionRef = useRef(null);
-
   const groupedSkills = skills.reduce((acc, skill) => {
     if (!acc[skill.category]) {
       acc[skill.category] = [];
@@ -16,42 +11,18 @@ const Skills = () => {
     return acc;
   }, {});
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.skill-category', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-        },
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power3.out',
-      });
-
-      gsap.from('.skill-bar', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 60%',
-        },
-        scaleX: 0,
-        transformOrigin: 'left',
-        duration: 1.5,
-        stagger: 0.05,
-        ease: 'power4.out',
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="skills" ref={sectionRef} className="relative py-40 bg-black overflow-hidden px-6">
+    <section id="skills" className="relative py-40 bg-black overflow-hidden px-6">
       <div className="max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-24 items-center">
           {/* Left: Content */}
-          <div className="space-y-12">
+          <motion.div
+            className="space-y-12"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <div className="flex items-center gap-4">
               <div className="h-px w-12 bg-primary"></div>
               <span className="text-white text-xs uppercase tracking-[0.5em] font-black">
@@ -81,12 +52,19 @@ const Skills = () => {
                 <div className="text-gray-500 text-xs font-bold uppercase tracking-widest">Projects Done</div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right: Skills List */}
           <div className="grid gap-12">
-            {Object.entries(groupedSkills).map(([category, skillList]) => (
-              <div key={category} className="skill-category space-y-6">
+            {Object.entries(groupedSkills).map(([category, skillList], categoryIdx) => (
+              <motion.div
+                key={category}
+                className="skill-category space-y-6"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: categoryIdx * 0.1 }}
+              >
                 <h3 className="text-white text-sm font-black uppercase tracking-[0.3em] flex items-center justify-between">
                   {category}
                   <span className="h-px flex-1 bg-white/10 ml-6" />
@@ -99,12 +77,18 @@ const Skills = () => {
                         <span className="text-xs font-bold">STABLE</span>
                       </div>
                       <div className="h-1 bg-white/5 w-full rounded-full overflow-hidden">
-                        <div className="skill-bar h-full bg-gradient-to-r from-primary via-secondary to-accent rounded-full" style={{ width: `${80 + Math.random() * 20}%` }} />
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-primary via-secondary to-accent rounded-full"
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${80 + Math.random() * 20}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, delay: 0.2 + idx * 0.05, ease: "circOut" }}
+                        />
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

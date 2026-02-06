@@ -1,160 +1,106 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { ChevronDown, ArrowRight } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowDown } from 'lucide-react';
 import { artistInfo } from '../mock';
-import InteractiveBackground from './InteractiveBackground';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const heroRef = useRef(null);
-  const contentRef = useRef(null);
-  const nameRef = useRef(null);
-  const ctaRef = useRef(null);
+  const nameParts = artistInfo.name.split(' ');
 
-  useEffect(() => {
-    setIsVisible(true);
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      }
+    }
+  };
 
-    const ctx = gsap.context(() => {
-      // Kinetic Typography for Name
-      const nameChars = nameRef.current.innerText.split('');
-      nameRef.current.innerHTML = nameChars
-        .map(char => `<span class="inline-block char">${char === ' ' ? '&nbsp;' : char}</span>`)
-        .join('');
-
-      gsap.from('.char', {
-        opacity: 0,
-        y: 100,
-        rotateX: -90,
-        stagger: 0.02,
-        duration: 1,
-        ease: 'power4.out',
-        delay: 0.5,
-      });
-
-      // Background patterns and glows reveal
-      gsap.from('.bg-glow', {
-        opacity: 0,
-        scale: 0.5,
-        duration: 2,
-        stagger: 0.3,
-        ease: 'power2.out',
-      });
-
-      // Content reveal
-      gsap.from('.hero-reveal', {
-        opacity: 0,
-        y: 40,
-        duration: 1.2,
-        stagger: 0.2,
-        ease: 'power3.out',
-        delay: 1,
-      });
-
-      // Magnetic Effect for CTA
-      const handleMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        const { left, top, width, height } = ctaRef.current.getBoundingClientRect();
-        const centerX = left + width / 2;
-        const centerY = top + height / 2;
-        const deltaX = clientX - centerX;
-        const deltaY = clientY - centerY;
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-        if (distance < 150) {
-          gsap.to(ctaRef.current, {
-            x: deltaX * 0.3,
-            y: deltaY * 0.3,
-            duration: 0.4,
-            ease: 'power2.out',
-          });
-        } else {
-          gsap.to(ctaRef.current, {
-            x: 0,
-            y: 0,
-            duration: 0.6,
-            ease: 'elastic.out(1, 0.3)',
-          });
-        }
-      };
-
-      window.addEventListener('mousemove', handleMouseMove);
-      return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const scrollToPortfolio = () => {
-    const element = document.getElementById('portfolio');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const item = {
+    hidden: { y: 100, rotateX: 30, opacity: 0 },
+    show: {
+      y: 0,
+      rotateX: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 70,
+        damping: 15,
+      }
     }
   };
 
   return (
-    <section
-      ref={heroRef}
-      id="home"
-      className="relative min-h-[110vh] flex items-center justify-center bg-black overflow-hidden"
-    >
-      <InteractiveBackground />
+    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden px-6">
 
-      {/* Modern Neon Glows */}
-      <div className="bg-glow absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full filter blur-[120px] pointer-events-none" />
-      <div className="bg-glow absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/20 rounded-full filter blur-[120px] pointer-events-none" />
-
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.15] pointer-events-none">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-          backgroundSize: '100px 100px'
-        }} />
-      </div>
-
-      <div ref={contentRef} className="relative z-10 max-w-[1400px] mx-auto px-6 text-center">
-        <div className="hero-reveal space-y-6">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
-            <span className="text-accent text-xs font-bold uppercase tracking-[0.3em]">
-              Next Gen UX Solutions
+      <div className="relative z-10 max-w-[1400px] mx-auto w-full">
+        <motion.div
+          className="space-y-2 md:space-y-6"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          {/* Eyebrow */}
+          <motion.div variants={item} className="flex items-center gap-4 mb-8">
+            <div className="h-px w-12 bg-accent"></div>
+            <span className="text-white text-sm md:text-base uppercase tracking-[0.5em] font-black glow-text">
+              {artistInfo.tagline.toUpperCase()}
             </span>
-          </div>
+          </motion.div>
 
-          <h1
-            ref={nameRef}
-            className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white leading-none overflow-hidden"
-          >
-            {artistInfo.name.toUpperCase()}
-          </h1>
-
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-8">
-            <p className="hero-reveal text-gray-400 text-xl md:text-2xl max-w-2xl font-medium leading-relaxed">
-              Crafting <span className="text-white italic">immersive digital experiences</span> that bridge the gap between imagination and reality.
-            </p>
-          </div>
-
-          <div className="pt-8">
-            <button
-              ref={ctaRef}
-              onClick={scrollToPortfolio}
-              className="group relative inline-flex items-center gap-4 bg-white text-black px-12 py-5 rounded-full text-lg font-bold transition-all duration-300 hover:bg-accent hover:text-black overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+          {/* Name - Part 1 */}
+          <div className="overflow-hidden perspective-1000">
+            <motion.h1
+              variants={item}
+              className="text-7xl md:text-[10rem] font-black text-white leading-[0.85] tracking-tighter"
             >
-              <span className="relative z-10 flex items-center gap-3">
-                LET'S CREATE <ArrowRight className="group-hover:translate-x-2 transition-transform" />
-              </span>
-            </button>
+              {nameParts[0].toUpperCase()}
+            </motion.h1>
           </div>
-        </div>
+
+          {/* Name - Part 2 */}
+          <div className="overflow-hidden perspective-1000">
+            <motion.h1
+              variants={item}
+              className="text-7xl md:text-[10rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent leading-[0.85] tracking-tighter italic"
+            >
+              {nameParts[1]?.toUpperCase() || 'DESIGN'}
+            </motion.h1>
+          </div>
+
+          {/* Role Description */}
+          <motion.p
+            variants={item}
+            className="text-gray-400 text-lg md:text-2xl font-medium max-w-2xl mt-8 leading-relaxed"
+          >
+            We craft <span className="text-white font-bold">digital experiences</span> that defy expectations.
+            Merging art, code, and psychology for the next generation of the web.
+          </motion.p>
+
+          {/* CTA */}
+          <motion.div variants={item} className="pt-12">
+            <button
+              onClick={() => document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' })}
+              className="group relative px-10 py-5 bg-white text-black rounded-full font-black text-lg uppercase tracking-widest hover:bg-accent transition-all duration-500 overflow-hidden"
+            >
+              <span className="relative z-10">Explore Work</span>
+              <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            </button>
+          </motion.div>
+
+        </motion.div>
       </div>
 
-      {/* Vertical Marquee or Scroll Text (GenZ style) */}
-      <div className="absolute bottom-10 left-10 hidden lg:block rotate-90 origin-left">
-        <span className="text-white/20 text-xs font-black tracking-[1em] uppercase">
-          Scroll to explore — {artistInfo.title}
-        </span>
-      </div>
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2, duration: 1, repeat: Infinity, repeatType: 'reverse' }}
+        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+      >
+        <ArrowDown size={32} className="text-gray-500" />
+      </motion.div>
     </section>
   );
 };

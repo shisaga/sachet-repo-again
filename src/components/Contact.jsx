@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Send, ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Send, ArrowUpRight } from 'lucide-react';
 import { artistInfo } from '../mock';
 import { toast } from 'sonner';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion } from 'framer-motion';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -13,25 +10,6 @@ const Contact = () => {
     email: '',
     message: ''
   });
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.contact-reveal', {
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-        },
-        opacity: 0,
-        y: 40,
-        duration: 1,
-        stagger: 0.15,
-        ease: 'power3.out',
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -49,29 +27,35 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" ref={sectionRef} className="relative py-40 bg-black overflow-hidden px-6">
+    <section id="contact" className="relative py-40 bg-black overflow-hidden px-6">
       {/* Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-secondary/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="relative z-10 max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-24">
           {/* Info */}
-          <div className="space-y-12">
-            <div className="contact-reveal flex items-center gap-4">
+          <motion.div
+            className="space-y-12"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="flex items-center gap-4">
               <div className="h-px w-12 bg-accent"></div>
               <span className="text-white text-xs uppercase tracking-[0.5em] font-black">
                 GET IN TOUCH
               </span>
             </div>
 
-            <h2 className="contact-reveal text-6xl md:text-8xl font-black text-white leading-none tracking-tighter">
+            <h2 className="text-6xl md:text-8xl font-black text-white leading-none tracking-tighter">
               READY TO <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
                 LEVEL UP?
               </span>
             </h2>
 
-            <div className="contact-reveal space-y-10">
+            <div className="space-y-10">
               <p className="text-gray-400 text-xl font-medium leading-relaxed max-w-sm">
                 Drop us a line for collaborations, inquiries, or just to talk design.
               </p>
@@ -102,10 +86,15 @@ const Contact = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Form */}
-          <div className="contact-reveal">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             <form onSubmit={handleSubmit} className="space-y-8 p-10 rounded-[2.5rem] bg-white/[0.03] border border-white/10 backdrop-blur-xl">
               <div className="space-y-2">
                 <label className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] ml-2">
@@ -160,7 +149,7 @@ const Contact = () => {
                 <Send size={20} className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-500" />
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

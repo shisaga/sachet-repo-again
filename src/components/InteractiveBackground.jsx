@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { gsap } from 'gsap';
 
 const InteractiveBackground = () => {
   const containerRef = useRef(null);
@@ -8,7 +7,6 @@ const InteractiveBackground = () => {
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const shapesRef = useRef([]);
-  const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -97,13 +95,13 @@ const InteractiveBackground = () => {
 
     // Particles (Neural Network look)
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 300;
+    const particlesCount = 400; // Optimized from 2000 for performance
     const positions = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      positions[i * 3] = (Math.random() - 0.5) * 25;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 25;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 25;
     }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -112,25 +110,21 @@ const InteractiveBackground = () => {
       size: 0.08,
       color: 0x9333EA,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.3,
       blending: THREE.AdditiveBlending,
+      sizeAttenuation: true
     });
 
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particles);
 
-    // Mouse move handler
-    const handleMouseMove = (event) => {
-      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // Mouse move handler with throttling for performance
+    let mouseX = 0;
+    let mouseY = 0;
 
-      // Animate camera
-      gsap.to(camera.position, {
-        x: mouseRef.current.x * 1,
-        y: mouseRef.current.y * 1,
-        duration: 2,
-        ease: 'power2.out',
-      });
+    const handleMouseMove = (event) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -144,17 +138,22 @@ const InteractiveBackground = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Animation loop
+    // Optimized Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
+
+      // Smooth camera movement
+      camera.position.x += (mouseX * 1 - camera.position.x) * 0.05;
+      camera.position.y += (mouseY * 1 - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
 
       shapes.forEach((item) => {
         item.mesh.rotation.x += item.rotationSpeed;
         item.mesh.rotation.y += item.rotationSpeed;
-        item.mesh.position.y += Math.sin(Date.now() * 0.001 * item.speed) * 0.01;
+        item.mesh.position.y += Math.sin(Date.now() * 0.001 * item.speed) * 0.005;
       });
 
-      particles.rotation.y += 0.0005;
+      particles.rotation.y += 0.0003;
 
       renderer.render(scene, camera);
     };
