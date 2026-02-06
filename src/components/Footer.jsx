@@ -1,65 +1,44 @@
 import React from 'react';
-import { artistInfo } from '../mock';
+import { Linkedin, Github, Instagram, Twitter } from 'lucide-react';
 
 const Footer = () => {
-  const nameParts = artistInfo.name.split(' ');
-
   return (
-    <footer className="relative bg-black border-t border-white/5 py-24 px-6 overflow-hidden">
-      {/* Decorative Glow */}
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="max-w-[1400px] mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-16">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
-            <div className="text-4xl font-black tracking-tighter flex items-center gap-1">
-              <span className="text-white">{nameParts[0].toUpperCase()}</span>
-              <span className="text-secondary">{nameParts[1]?.toUpperCase() || ''}</span>
-            </div>
+    <footer className="bg-black text-white py-12 border-t-4 border-black">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="text-center md:text-left">
+            <h3 className="text-2xl font-black uppercase tracking-tighter mb-2">
+              Sachet<span className="text-primary">.</span>Patel
+            </h3>
+            <p className="text-gray-400 text-sm font-medium">
+              © {new Date().getFullYear()} All Rights Reserved.
+            </p>
           </div>
 
-          {/* Marquee or Large Text */}
-          <div className="hidden lg:block flex-1 mx-20 overflow-hidden whitespace-nowrap">
-            <div className="animate-marquee inline-block">
-              <span className="text-white/5 text-8xl font-black uppercase tracking-tighter">
-                UX RESEARCH • VISUAL DESIGN • INTERACTIVE DEV • UX RESEARCH • VISUAL DESIGN • INTERACTIVE DEV
+          <div className="flex gap-6">
+            {[Github, Linkedin, Instagram, Twitter].map((Icon, idx) => (
+              <a
+                key={idx}
+                href="#"
+                className="bg-white text-black p-3 rounded-lg border-2 border-black hover:bg-primary transition-colors shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-none hover:translate-y-1"
+              >
+                <Icon size={20} strokeWidth={2.5} />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Marquee */}
+        <div className="mt-12 overflow-hidden border-t border-white/20 pt-8">
+          <div className="animate-marquee whitespace-nowrap flex gap-8">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <span key={i} className="text-4xl font-black text-transparent hover:text-primary transition-colors duration-500 cursor-default" style={{ WebkitTextStroke: '1px white' }}>
+                READY FOR THE NEXT LEVEL ?
               </span>
-            </div>
-          </div>
-
-          {/* Copyright & Social */}
-          <div className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
-            <div className="flex items-center gap-6">
-              {Object.entries(artistInfo.social).map(([platform, url]) => (
-                <a
-                  key={platform}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-white transition-colors text-xs font-black uppercase tracking-[0.2em]"
-                >
-                  {platform}
-                </a>
-              ))}
-            </div>
-
-            <div className="text-gray-600 text-[10px] font-black uppercase tracking-[0.4em]">
-              © {new Date().getFullYear()} {artistInfo.name.toUpperCase()} / ALL RIGHTS RESERVED
-            </div>
+            ))}
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
     </footer>
   );
 };

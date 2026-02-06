@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const CustomCursor = () => {
-    const [cursorVariant, setCursorVariant] = useState('default');
+    const [cursorState, setCursorState] = useState('default');
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
 
@@ -12,56 +12,70 @@ const CustomCursor = () => {
 
     useEffect(() => {
         const moveCursor = (e) => {
-            cursorX.set(e.clientX - 16);
-            cursorY.set(e.clientY - 16);
+            cursorX.set(e.clientX - 24); // Center the 48px cursor
+            cursorY.set(e.clientY - 24);
         };
 
         const handleMouseOver = (e) => {
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
-                setCursorVariant('hover');
+            const target = e.target;
+            if (
+                target.tagName === 'A' ||
+                target.tagName === 'BUTTON' ||
+                target.closest('a') ||
+                target.closest('button') ||
+                target.classList.contains('clickable')
+            ) {
+                setCursorState('hover');
             } else {
-                setCursorVariant('default');
+                setCursorState('default');
             }
         };
 
+        const handleMouseDown = () => setCursorState('click');
+        const handleMouseUp = () => setCursorState('hover'); // Assuming usually over element when up
+
         window.addEventListener('mousemove', moveCursor);
         window.addEventListener('mouseover', handleMouseOver);
+        window.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mouseup', handleMouseUp);
 
         return () => {
             window.removeEventListener('mousemove', moveCursor);
             window.removeEventListener('mouseover', handleMouseOver);
+            window.removeEventListener('mousedown', handleMouseDown);
+            window.removeEventListener('mouseup', handleMouseUp);
         };
     }, [cursorX, cursorY]);
 
-    const variants = {
-        default: {
-            width: 32,
-            height: 32,
-            backgroundColor: 'rgba(147, 51, 234, 0.5)',
-            mixBlendMode: 'difference',
-        },
-        hover: {
-            width: 64,
-            height: 64,
-            backgroundColor: 'rgba(16, 185, 129, 0.8)',
-            mixBlendMode: 'difference',
+    const getImageForState = () => {
+        switch (cursorState) {
+            case 'hover':
+                return '/images/face3.svg'; // Excited face?
+            case 'click':
+                return '/images/face2.svg'; // Surprised/Action face?
+            default:
+                return '/images/face1.svg'; // Neutral face
         }
     };
 
     return (
         <motion.div
-            className="fixed top-0 left-0 bg-primary rounded-full pointer-events-none z-[9999] flex items-center justify-center backdrop-blur-sm"
+            className="fixed top-0 left-0 pointer-events-none z-[9999] flex items-center justify-center"
             style={{
                 translateX: cursorXSpring,
                 translateY: cursorYSpring,
             }}
-            variants={variants}
-            animate={cursorVariant}
-            transition={{ type: 'spring', stiffness: 500, damping: 28 }}
         >
-            {cursorVariant === 'hover' && (
-                <span className="text-xl">👀</span>
-            )}
+            <motion.img
+                src={getImageForState()}
+                alt="Cursor"
+                className="w-12 h-12 md:w-16 md:h-16 drop-shadow-lg"
+                animate={{
+                    scale: cursorState === 'click' ? 0.8 : cursorState === 'hover' ? 1.2 : 1,
+                    rotate: cursorState === 'hover' ? 10 : 0
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            />
         </motion.div>
     );
 };

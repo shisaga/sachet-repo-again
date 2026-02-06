@@ -1,63 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
 import { artistInfo } from '../mock';
-
-const SLICE_COUNT = 8;
-const BG_IMAGE_URL = "https://framerusercontent.com/images/4BgyhzbOFmHs19ZZC9eumMLXkxI.webp";
-
-// Slice Background Component
-const SliceRevealBackground = () => {
-  return (
-    <motion.div
-      className="absolute inset-0 z-0"
-      initial="hidden"
-      animate="visible"
-    >
-      {Array.from({ length: SLICE_COUNT }).map((_, i) => {
-        const sliceWidth = 100 / SLICE_COUNT;
-        return (
-          <motion.div
-            key={i}
-            className="absolute inset-y-0 overflow-hidden"
-            style={{
-              left: `${sliceWidth * i}%`,
-              width: `${sliceWidth}%`,
-            }}
-            variants={{
-              hidden: {
-                scaleX: 0,
-                filter: "blur(12px)",
-                opacity: 0,
-              },
-              visible: {
-                scaleX: 1,
-                filter: "blur(0px)",
-                opacity: 1,
-                transition: {
-                  duration: 1.2,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.1 * i,
-                },
-              },
-            }}
-            transformOrigin="left"
-          >
-            <div
-              className="absolute inset-0 h-full w-[800%] max-w-none"
-              style={{
-                left: `${-100 * i}%`,
-                backgroundImage: `url(${BG_IMAGE_URL})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
-          </motion.div>
-        );
-      })}
-    </motion.div>
-  );
-};
+import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
   const nameParts = artistInfo.name.split(' ');
@@ -76,7 +20,7 @@ const Hero = () => {
       const { innerWidth, innerHeight } = window;
       const x = e.clientX / innerWidth - 0.5;
       const y = e.clientY / innerHeight - 0.5;
-      mouseX.set(x * 20); // Move 20px max
+      mouseX.set(x * 20);
       mouseY.set(y * 20);
     };
     window.addEventListener('mousemove', handleMouseMove);
@@ -85,128 +29,128 @@ const Hero = () => {
 
   const containerAnimations = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 1.2, // Wait for bg reveal
-      }
-    }
+    show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.5 } }
   };
 
   const itemAnimations = {
     hidden: { y: 50, opacity: 0 },
-    show: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 50,
-        damping: 20,
-      }
-    }
+    show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 60, damping: 15 } }
   };
 
   return (
-    <section id="home" className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center">
-      {/* Background Layer */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={{ scale, x: springX, y: springY }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-purple-950 to-black z-0 opacity-50" />
-        <SliceRevealBackground />
-
-        {/* Overlay Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-        <div className="absolute inset-0 bg-black/20 z-10" />
-      </motion.div>
-
-      {/* Floating Orbs (from user request) */}
-      <motion.div
-        className="absolute top-24 left-24 w-96 h-96 bg-gradient-to-br from-cyan-500/10 to-purple-600/10 rounded-full blur-3xl z-10 pointer-events-none"
-        animate={{ y: [0, -40, 0], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+    <section id="home" className="relative h-screen w-full overflow-hidden bg-white flex items-center justify-center">
+      {/* Background Layer: Blob Scatter */}
+      <div
+        className="absolute inset-0 z-0 bg-repeat opacity-20"
+        style={{
+          backgroundImage: 'url("/images/blob-scatter-haikei.png")',
+          backgroundSize: '800px',
+        }}
       />
-      <motion.div
-        className="absolute bottom-32 right-32 w-80 h-80 bg-gradient-to-tl from-pink-500/10 to-blue-600/10 rounded-full blur-3xl z-10 pointer-events-none"
-        animate={{ y: [0, 50, 0], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+
+      {/* Cartoon Assets */}
+      {/* Moon - Top Right */}
+      <motion.img
+        src="/images/moon.png"
+        alt="Moon"
+        className="absolute top-10 right-10 w-24 md:w-48 z-10"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+        style={{ x: springX, y: springY }}
+      />
+
+      {/* Aeroplane - Flying Across */}
+      <motion.img
+        src="/images/aeroplane-icon.png"
+        alt="Plane"
+        className="absolute top-1/4 left-0 w-16 md:w-24 z-10"
+        animate={{
+          x: ['-20vw', '120vw'],
+          y: [0, -50, 0, 50, 0],
+          rotate: [0, -10, 0, 10, 0]
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear",
+          delay: 2
+        }}
+      />
+
+      {/* Lincoln - Peeking from Bottom Left */}
+      <motion.img
+        src="/images/lincoln.png"
+        alt="Lincoln"
+        className="absolute -bottom-10 left-10 w-32 md:w-64 z-20 pointer-events-none"
+        initial={{ y: 200 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 1, type: "spring", stiffness: 50 }}
+        whileHover={{ y: 20, rotate: -5 }}
+      />
+
+      {/* Grass - Bottom Border */}
+      <div
+        className="absolute bottom-0 left-0 w-full h-16 md:h-24 z-10"
+        style={{
+          backgroundImage: 'url("/images/grasss.png")',
+          backgroundRepeat: 'repeat-x',
+          backgroundSize: 'contain',
+          backgroundPosition: 'bottom'
+        }}
       />
 
       {/* Content Layer */}
-      <div className="relative z-20 max-w-[1400px] mx-auto w-full px-6">
+      <div className="relative z-30 max-w-[1400px] mx-auto w-full px-6 text-center md:text-left">
         <motion.div
-          className="space-y-4 md:space-y-6"
+          className="space-y-6"
           variants={containerAnimations}
           initial="hidden"
           animate="show"
         >
           {/* Eyebrow */}
-          <motion.div variants={itemAnimations} className="flex items-center gap-4 mb-8">
-            <div className="h-px w-12 bg-cyan-400 box-shadow-glow"></div>
-            <span className="text-cyan-400 text-sm md:text-base uppercase tracking-[0.4em] font-black glow-text">
-              {artistInfo.tagline.toUpperCase()}
+          <motion.div variants={itemAnimations} className="inline-flex items-center gap-3 border-2 border-black px-4 py-1 rounded-full bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <span className="w-3 h-3 bg-accent rounded-full border border-black animate-pulse" />
+            <span className="text-black text-xs font-black uppercase tracking-widest">
+              {artistInfo.tagline}
             </span>
           </motion.div>
 
-          {/* Name - Part 1 */}
-          <div className="overflow-hidden">
+          {/* Name */}
+          <div className="relative">
             <motion.h1
               variants={itemAnimations}
-              className="text-7xl md:text-[10rem] font-black text-white leading-[0.85] tracking-tighter"
+              className="text-8xl md:text-[12rem] font-black text-black leading-[0.8] tracking-tighter"
             >
               {nameParts[0].toUpperCase()}
             </motion.h1>
-          </div>
-
-          {/* Name - Part 2 */}
-          <div className="overflow-hidden">
             <motion.h1
               variants={itemAnimations}
-              className="text-7xl md:text-[10rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 leading-[0.85] tracking-tighter italic"
+              className="text-8xl md:text-[12rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent leading-[0.8] tracking-tighter italic stroke-black text-stroke-2"
+              style={{ WebkitTextStroke: '3px black' }}
             >
               {nameParts[1]?.toUpperCase()}
             </motion.h1>
           </div>
 
           {/* Description */}
-          <motion.p
-            variants={itemAnimations}
-            className="text-gray-300 text-lg md:text-2xl font-medium max-w-2xl mt-8 leading-relaxed backdrop-blur-sm bg-black/10 p-4 rounded-xl border border-white/5"
-          >
-            We craft <span className="text-white font-bold">digital universes</span> that defy expectations.
-            Architecting emotions with code and motion.
-          </motion.p>
+          <motion.div variants={itemAnimations} className="max-w-xl bg-white border-2 border-black p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] z-30 relative group hover:-translate-y-1 transition-transform">
+            <p className="text-black text-xl font-medium leading-relaxed">
+              We craft <span className="bg-primary px-1 border border-black">digital universes</span> that defy expectations.
+              Merging art, code, and psychology.
+            </p>
+          </motion.div>
 
           {/* CTA */}
-          <motion.div variants={itemAnimations} className="pt-10">
+          <motion.div variants={itemAnimations} className="pt-8">
             <button
               onClick={() => document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' })}
-              className="group relative px-10 py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-black text-lg uppercase tracking-widest overflow-hidden shadow-lg hover:shadow-cyan-500/20 transition-all duration-500"
+              className="neo-button text-xl flex items-center gap-3 mx-auto md:mx-0 bg-accent text-white"
             >
-              <span className="relative z-10">Dive In</span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              Dive In <ArrowRight size={24} strokeWidth={3} />
             </button>
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2"
-      >
-        <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center p-1">
-          <motion.div
-            className="w-1.5 h-3 bg-white rounded-full"
-            animate={{ y: [0, 18, 0] }}
-            transition={{ duration: 1.4, repeat: Infinity }}
-          />
-        </div>
-      </motion.div>
     </section>
   );
 };
