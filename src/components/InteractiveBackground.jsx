@@ -160,12 +160,14 @@ const InteractiveBackground = () => {
     };
     animate();
 
+    const container = containerRef.current;
+
     // Cleanup
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      if (containerRef.current && renderer.domElement) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container && renderer.domElement) {
+        container.removeChild(renderer.domElement);
       }
       renderer.dispose();
       geometries.forEach(g => g.dispose());
