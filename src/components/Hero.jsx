@@ -53,7 +53,7 @@ const Hero = () => {
       <motion.img
         src="/images/moon.png"
         alt="Moon"
-        className="absolute top-10 right-10 w-24 md:w-48 z-10"
+        className="absolute top-10 right-10 w-24 md:w-32 z-10"
         animate={{ rotate: 360 }}
         transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
         style={{ x: springX, y: springY }}
@@ -70,34 +70,63 @@ const Hero = () => {
           rotate: [0, -10, 0, 10, 0]
         }}
         transition={{
-          duration: 20,
+          duration: 25,
           repeat: Infinity,
           ease: "linear",
           delay: 2
         }}
       />
 
+      {/* Space Man - Floating (Top Left) */}
+      <motion.img
+        src="/images/spacemanreadingmap-in-space-space.png"
+        alt="Space Man"
+        className="absolute top-20 left-10 md:left-20 w-32 md:w-48 z-20 pointer-events-none"
+        animate={{
+          y: [-20, 20, -20],
+          rotate: [-5, 5, -5]
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+
+      {/* Cartoon Girl - Standing (Right/Middle) */}
+      <motion.img
+        src="/images/cartoongirl.png"
+        alt="Girl"
+        className="absolute bottom-12 right-4 md:right-20 w-32 md:w-56 z-20 pointer-events-none"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1.2, duration: 1 }}
+        whileHover={{ scale: 1.1, rotate: 5 }}
+      />
+
       {/* Lincoln - Peeking from Bottom Left */}
       <motion.img
         src="/images/lincoln.png"
         alt="Lincoln"
-        className="absolute -bottom-10 left-10 w-32 md:w-64 z-20 pointer-events-none"
+        className="absolute -bottom-4 left-4 md:left-10 w-40 md:w-72 z-20 pointer-events-none"
         initial={{ y: 200 }}
         animate={{ y: 0 }}
         transition={{ delay: 1, type: "spring", stiffness: 50 }}
         whileHover={{ y: 20, rotate: -5 }}
       />
 
-      {/* Grass - Bottom Border */}
+      {/* Grass - Bottom Border (Closer/Tighter) */}
       <div
-        className="absolute bottom-0 left-0 w-full h-16 md:h-24 z-10"
+        className="absolute bottom-0 left-0 w-full h-12 md:h-20 z-10"
         style={{
           backgroundImage: 'url("/images/grasss.png")',
           backgroundRepeat: 'repeat-x',
-          backgroundSize: 'contain',
+          backgroundSize: '150px auto', // Tighter spacing
           backgroundPosition: 'bottom'
         }}
       />
+
+      <div className="absolute inset-0 z-0" style={{ scale, x: springX, y: springY }} />
 
       {/* Content Layer */}
       <div className="relative z-30 max-w-[1400px] mx-auto w-full px-6 text-center md:text-left">

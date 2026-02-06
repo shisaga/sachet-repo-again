@@ -35,7 +35,17 @@ const Portfolio = () => {
 
   return (
     <section id="portfolio" className="relative py-32 bg-white overflow-hidden px-6 border-t-4 border-black">
-      <div className="max-w-[1400px] mx-auto">
+      {/* Background Pattern */}
+      <div
+        className="absolute inset-0 z-0 opacity-15 pointer-events-none"
+        style={{
+          backgroundImage: 'url("/images/projectsectionbacground.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      <div className="relative z-10 max-w-[1400px] mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
           <div className="space-y-4">
