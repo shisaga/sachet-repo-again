@@ -10,6 +10,8 @@ const Portfolio = () => {
     loop: true,
     align: 'center',
     skipSnaps: false,
+    dragFree: true, // Allow smooth dragging
+    containScroll: 'trimSnaps'
   });
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -37,14 +39,14 @@ const Portfolio = () => {
     <section id="portfolio" className="relative py-32 bg-white overflow-hidden px-6 border-t-4 border-black">
       {/* Background Pattern */}
       <div
-        className="absolute inset-0 z-0 opacity-15 pointer-events-none"
+        className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply"
         style={{
           backgroundImage: 'url("/images/projectsectionbacground.png")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
         }}
       />
+
       <div className="relative z-10 max-w-[1400px] mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
@@ -55,7 +57,7 @@ const Portfolio = () => {
             <h2 className="text-6xl md:text-8xl font-black text-black leading-none tracking-tighter">
               DIGITAL <br />
               <span className="text-primary" style={{ textShadow: '4px 4px 0px #000' }}>
-                PLAYGROUND
+                COLLECTION
               </span>
             </h2>
           </div>
@@ -74,58 +76,74 @@ const Portfolio = () => {
           </div>
         </div>
 
-        {/* Mobile Frame Swiper */}
-        <div className="relative flex justify-center py-10">
-          {/* Phone Frame Container */}
-          <div className="relative w-[350px] md:w-[800px] h-[700px] md:h-[450px] bg-no-repeat bg-contain bg-center flex items-center justify-center p-4 md:p-12 rotate-0 md:rotate-0"
-            style={{ backgroundImage: 'url("/images/frame.png")' }}
-          >
-            {/* Screen Area (Content) */}
-            <div className="w-[90%] h-[85%] md:w-[92%] md:h-[88%] bg-white overflow-hidden rounded-[2.5rem] md:rounded-[3rem] border-2 border-black relative">
-              <div className="h-full w-full overflow-hidden" ref={emblaRef}>
-                <div className="flex touch-pan-y h-full">
-                  {filteredProjects.map((project, index) => (
-                    <div key={project.id} className="flex-[0_0_100%] min-w-0 relative h-full">
-                      {/* Project Slide */}
-                      <div className="relative w-full h-full group">
+        {/* Multiple Phones Swiper */}
+        <div className="relative py-10">
+          <div className="overflow-visible" ref={emblaRef}>
+            <div className="flex touch-pan-y" style={{ marginLeft: '-1rem' }}>
+              {filteredProjects.map((project, index) => {
+                // Alternate rotations for "scattered" look
+                const rotation = index % 2 === 0 ? 'rotate-2' : '-rotate-2';
+                const marginTop = index % 2 === 0 ? 'mt-0' : 'mt-12';
+
+                return (
+                  <div key={project.id} className={`flex-[0_0_85%] md:flex-[0_0_35%] min-w-0 pl-12 ${marginTop}`}>
+                    {/* Phone Container */}
+                    <div className={`relative w-full aspect-[9/18] transition-transform duration-500 hover:scale-105 hover:z-20 hover:rotate-0 ${rotation}`}>
+                      {/* Phone Frame Image */}
+                      <div
+                        className="absolute inset-0 bg-no-repeat bg-contain bg-center pointer-events-none z-20"
+                        style={{ backgroundImage: 'url("/images/frame.png")' }}
+                      />
+
+                      {/* Content (Screen) */}
+                      {/* Adjust padding/margins to fit INSIDE the frame image - trial and error based on typical frame assets */}
+                      <div className="absolute top-[2%] left-[3%] right-[3%] bottom-[2%] rounded-[2rem] overflow-hidden bg-black z-10 group">
                         <img
                           src={project.image}
                           alt={project.title}
                           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                         />
+
                         {/* Overlay Info */}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center text-center p-8 text-white">
-                          <div className="bg-primary text-black px-4 py-1 text-xs font-black uppercase tracking-widest mb-4">
+                        <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center text-center p-6 text-white backdrop-blur-sm">
+                          <div className="bg-primary text-black px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-3 rounded-full">
                             {project.category}
                           </div>
-                          <h3 className="text-4xl font-black mb-4 uppercase leading-none">{project.title}</h3>
-                          <p className="font-medium text-sm max-w-xs">{project.description}</p>
-                          <div className="mt-8 flex gap-2 justify-center">
+                          <h3 className="text-3xl font-black mb-3 uppercase leading-none">{project.title}</h3>
+                          <p className="font-medium text-xs max-w-xs text-gray-300 line-clamp-3 mb-6">{project.description}</p>
+
+                          <div className="flex gap-2 justify-center mb-6 flex-wrap">
                             {project.tools.slice(0, 3).map((tool, i) => (
-                              <span key={i} className="text-[10px] border border-white px-2 py-1 rounded-full uppercase">{tool}</span>
+                              <span key={i} className="text-[9px] border border-white/50 px-2 py-1 rounded-full uppercase">{tool}</span>
                             ))}
                           </div>
+
+                          <button className="bg-white text-black p-3 rounded-full hover:bg-primary transition-colors">
+                            <ExternalLink size={20} />
+                          </button>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Navigation inside frame (optional or outside) */}
-              <button
-                onClick={scrollPrev}
-                className="absolute top-1/2 left-4 -translate-y-1/2 bg-white border-2 border-black p-2 rounded-full shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-primary transition-colors z-10"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                onClick={scrollNext}
-                className="absolute top-1/2 right-4 -translate-y-1/2 bg-white border-2 border-black p-2 rounded-full shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-primary transition-colors z-10"
-              >
-                <ChevronRight size={20} />
-              </button>
+                  </div>
+                );
+              })}
             </div>
+          </div>
+
+          {/* Navigation Buttons (Moved to Bottom) */}
+          <div className="flex justify-center gap-6 mt-16 z-20 relative">
+            <button
+              onClick={scrollPrev}
+              className="p-4 rounded-full bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all"
+            >
+              <ChevronLeft size={24} strokeWidth={3} />
+            </button>
+            <button
+              onClick={scrollNext}
+              className="p-4 rounded-full bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all"
+            >
+              <ChevronRight size={24} strokeWidth={3} />
+            </button>
           </div>
         </div>
 

@@ -41,7 +41,7 @@ const Hero = () => {
     <section id="home" className="relative h-screen w-full overflow-hidden bg-white flex items-center justify-center">
       {/* Background Layer: Blob Scatter */}
       <div
-        className="absolute inset-0 z-0 bg-repeat opacity-20"
+        className="absolute inset-0 z-0 bg-repeat opacity-60"
         style={{
           backgroundImage: 'url("/images/blob-scatter-haikei.png")',
           backgroundSize: '800px',
@@ -53,7 +53,7 @@ const Hero = () => {
       <motion.img
         src="/images/moon.png"
         alt="Moon"
-        className="absolute top-10 right-10 w-24 md:w-32 z-10"
+        className="absolute top-10 right-10 w-24 md:w-32 z-50"
         animate={{ rotate: 360 }}
         transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
         style={{ x: springX, y: springY }}
@@ -97,7 +97,7 @@ const Hero = () => {
       <motion.img
         src="/images/cartoongirl.png"
         alt="Girl"
-        className="absolute bottom-12 right-4 md:right-20 w-32 md:w-56 z-20 pointer-events-none"
+        className="absolute bottom-0 right-4 md:right-20 w-32 md:w-56 z-20 pointer-events-none"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.2, duration: 1 }}
@@ -117,12 +117,22 @@ const Hero = () => {
 
       {/* Grass - Bottom Border (Closer/Tighter) */}
       <div
-        className="absolute bottom-0 left-0 w-full h-12 md:h-20 z-10"
+        className="absolute bottom-0 left-0 w-full h-12 md:h-20 z-10 -translate-x-10 translate-y-[32px]"
+
         style={{
           backgroundImage: 'url("/images/grasss.png")',
           backgroundRepeat: 'repeat-x',
-          backgroundSize: '150px auto', // Tighter spacing
+          backgroundSize: '128px auto', // Tighter spacing
           backgroundPosition: 'bottom'
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-full h-12 md:h-20 z-10 translate-y-[32px] opacity-70"
+        style={{
+          backgroundImage: 'url("/images/grasss.png")',
+          backgroundRepeat: 'repeat-x',
+          backgroundSize: '128px auto',
+          backgroundPosition: 'bottom',
         }}
       />
 
