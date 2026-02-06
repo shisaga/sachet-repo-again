@@ -7,7 +7,7 @@ const InteractiveBackground = () => {
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
-  const particlesRef = useRef(null);
+  const shapesRef = useRef([]);
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const InteractiveBackground = () => {
       0.1,
       1000
     );
-    camera.position.z = 5;
+    camera.position.z = 8;
     cameraRef.current = camera;
 
     // Renderer setup
@@ -34,83 +34,100 @@ const InteractiveBackground = () => {
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Create particles
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
-    const positions = new Float32Array(particlesCount * 3);
-    const colors = new Float32Array(particlesCount * 3);
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
 
-    // Green color variations
-    const color1 = new THREE.Color(0x10B981); // Emerald green
-    const color2 = new THREE.Color(0x34D399); // Light green
-    const color3 = new THREE.Color(0x059669); // Dark green
+    const pointLight = new THREE.PointLight(0x9333EA, 2);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    const pointLight2 = new THREE.PointLight(0x3B82F6, 2);
+    pointLight2.position.set(-5, -5, 5);
+    scene.add(pointLight2);
+
+    // Create floating shapes (GenZ Glassmorphism)
+    const shapes = [];
+    const geometries = [
+      new THREE.IcosahedronGeometry(1, 0),
+      new THREE.TorusGeometry(0.7, 0.2, 16, 100),
+      new THREE.OctahedronGeometry(1, 0)
+    ];
+
+    const material = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0.1,
+      roughness: 0.1,
+      transmission: 0.9,
+      thickness: 0.5,
+      transparent: true,
+      opacity: 0.3,
+    });
+
+    for (let i = 0; i < 8; i++) {
+      const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+      const mesh = new THREE.Mesh(geometry, material.clone());
+
+      mesh.position.set(
+        (Math.random() - 0.5) * 15,
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 5
+      );
+
+      mesh.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+      );
+
+      const scale = 0.5 + Math.random();
+      mesh.scale.set(scale, scale, scale);
+
+      // Assign custom color
+      mesh.material.color.set(i % 2 === 0 ? 0x9333EA : 0x00F5FF);
+
+      scene.add(mesh);
+      shapes.push({
+        mesh,
+        speed: 0.005 + Math.random() * 0.01,
+        rotationSpeed: 0.01 + Math.random() * 0.02
+      });
+    }
+    shapesRef.current = shapes;
+
+    // Particles (Neural Network look)
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 300;
+    const positions = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount; i++) {
-      // Position
       positions[i * 3] = (Math.random() - 0.5) * 20;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-
-      // Color - randomly choose from green palette
-      const randomColor = Math.random();
-      let chosenColor;
-      if (randomColor < 0.33) {
-        chosenColor = color1;
-      } else if (randomColor < 0.66) {
-        chosenColor = color2;
-      } else {
-        chosenColor = color3;
-      }
-
-      colors[i * 3] = chosenColor.r;
-      colors[i * 3 + 1] = chosenColor.g;
-      colors[i * 3 + 2] = chosenColor.b;
     }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    // Particle material
     const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.05,
-      vertexColors: true,
+      size: 0.08,
+      color: 0x9333EA,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.4,
       blending: THREE.AdditiveBlending,
-      sizeAttenuation: true,
     });
 
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particles);
-    particlesRef.current = particles;
-
-    // Create connecting lines
-    const linesGeometry = new THREE.BufferGeometry();
-    const linesMaterial = new THREE.LineBasicMaterial({
-      color: 0x10B981,
-      transparent: true,
-      opacity: 0.1,
-    });
-    const lines = new THREE.LineSegments(linesGeometry, linesMaterial);
-    scene.add(lines);
 
     // Mouse move handler
     const handleMouseMove = (event) => {
       mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      // Animate camera with GSAP
+      // Animate camera
       gsap.to(camera.position, {
-        x: mouseRef.current.x * 0.5,
-        y: mouseRef.current.y * 0.5,
-        duration: 2,
-        ease: 'power2.out',
-      });
-
-      // Animate particles rotation
-      gsap.to(particles.rotation, {
-        x: mouseRef.current.y * 0.1,
-        y: mouseRef.current.x * 0.1,
+        x: mouseRef.current.x * 1,
+        y: mouseRef.current.y * 1,
         duration: 2,
         ease: 'power2.out',
       });
@@ -131,36 +148,13 @@ const InteractiveBackground = () => {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Rotate particles slowly
-      particles.rotation.y += 0.001;
+      shapes.forEach((item) => {
+        item.mesh.rotation.x += item.rotationSpeed;
+        item.mesh.rotation.y += item.rotationSpeed;
+        item.mesh.position.y += Math.sin(Date.now() * 0.001 * item.speed) * 0.01;
+      });
 
-      // Update connecting lines
-      const positions = particlesGeometry.attributes.position.array;
-      const linePositions = [];
-
-      for (let i = 0; i < particlesCount; i++) {
-        const i3 = i * 3;
-        for (let j = i + 1; j < particlesCount; j++) {
-          const j3 = j * 3;
-          const dx = positions[i3] - positions[j3];
-          const dy = positions[i3 + 1] - positions[j3 + 1];
-          const dz = positions[i3 + 2] - positions[j3 + 2];
-          const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-          if (distance < 1.5) {
-            linePositions.push(
-              positions[i3],
-              positions[i3 + 1],
-              positions[i3 + 2],
-              positions[j3],
-              positions[j3 + 1],
-              positions[j3 + 2]
-            );
-          }
-        }
-      }
-
-      linesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+      particles.rotation.y += 0.0005;
 
       renderer.render(scene, camera);
     };
@@ -174,10 +168,10 @@ const InteractiveBackground = () => {
         containerRef.current.removeChild(renderer.domElement);
       }
       renderer.dispose();
+      geometries.forEach(g => g.dispose());
+      material.dispose();
       particlesGeometry.dispose();
       particlesMaterial.dispose();
-      linesGeometry.dispose();
-      linesMaterial.dispose();
     };
   }, []);
 
@@ -190,7 +184,7 @@ const InteractiveBackground = () => {
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 1,
+        zIndex: 0,
         pointerEvents: 'none',
       }}
     />

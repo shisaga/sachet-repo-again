@@ -1,127 +1,79 @@
-// Mock data for Premium Light Green UI/UX Designer Portfolio
+// Mock data for GenZ Design Studio Portfolio
 
 export const artistInfo = {
-  name: "Alex Rivera",
-  title: "UI/UX Designer",
-  tagline: "Crafting Intuitive & Beautiful Digital Experiences",
-  bio: "Passionate UI/UX designer specializing in creating elegant, user-centered digital products. With a keen eye for detail and a deep understanding of user behavior, I transform complex problems into simple, beautiful solutions that users love.",
-  email: "hello@alexrivera.design",
+  name: "Sachet Patel",
+  title: "Next-Gen UI/UX Designer",
+  tagline: "Architecting Digital Emotions & Interactive Realities",
+  bio: "We don't just build apps; we architect digital emotions. Our process is rooted in GenZ psychology and cutting-edge interactive technology. Specializing in high-fidelity visuals and research-driven flows.",
+  email: "hello@sachet.design",
   social: {
-    behance: "https://behance.net",
-    dribbble: "https://dribbble.com",
-    instagram: "https://instagram.com",
-    linkedin: "https://linkedin.com"
+    behance: "https://behance.net/sachet",
+    dribbble: "https://dribbble.com/sachet",
+    instagram: "https://instagram.com/sachet",
+    linkedin: "https://linkedin.com/in/sachet"
   }
 };
 
 export const portfolioCategories = [
   {
-    id: "web-design",
-    name: "Web Design",
-    description: "Modern, responsive web interfaces and experiences"
+    id: "immersive-web",
+    name: "Immersive Web",
+    description: "Next-gen web experiences with 3D and motion."
   },
   {
-    id: "mobile-apps",
-    name: "Mobile Apps",
-    description: "Intuitive mobile app designs for iOS and Android"
+    id: "mobile-native",
+    name: "Mobile Native",
+    description: "High-performance mobile interfaces."
   },
   {
-    id: "brand-identity",
-    name: "Brand & Identity",
-    description: "Visual identity systems and brand experiences"
+    id: "identity",
+    name: "Visual Identity",
+    description: "Branding that screams authority."
   }
 ];
 
 export const portfolioProjects = [
   {
     id: 1,
-    title: "Gradient Dashboard",
-    category: "web-design",
-    description: "Modern dashboard interface with beautiful gradient design system and intuitive navigation",
+    title: "NEON CORE",
+    category: "immersive-web",
+    description: "A futuristic dashboard with glassmorphic elements and real-time data visualization.",
     image: "https://images.unsplash.com/photo-1558655146-d09347e92766",
-    tools: ["Figma", "Protopie", "Design System"]
+    tools: ["THREE.JS", "GSAP", "REACT"]
   },
   {
     id: 2,
-    title: "Creative Studio Website",
-    category: "web-design",
-    description: "Portfolio website for creative agency with smooth animations and modern layout",
+    title: "VIRTUAL STUDIO",
+    category: "immersive-web",
+    description: "Portfolio website for a creative agency featuring advanced scroll interactions.",
     image: "https://images.pexels.com/photos/326514/pexels-photo-326514.jpeg",
-    tools: ["Figma", "Adobe XD", "Webflow"]
+    tools: ["FIGMA", "WEBGL", "TAILWIND"]
   },
   {
     id: 3,
-    title: "Design System Documentation",
-    category: "web-design",
-    description: "Comprehensive design system with components, patterns, and guidelines",
-    image: "https://images.unsplash.com/photo-1602576666092-bf6447a729fc",
-    tools: ["Figma", "Storybook", "Zeroheight"]
+    title: "ECHO APP",
+    category: "mobile-native",
+    description: "A neural-network inspired finance tracker with gesture-based navigation.",
+    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3",
+    tools: ["SWIFTUI", "PROTOPY", "FIGMA"]
   },
   {
     id: 4,
-    title: "Finance Tracker App",
-    category: "mobile-apps",
-    description: "Clean and intuitive mobile app for personal finance management",
-    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3",
-    tools: ["Figma", "Principle", "Protopie"]
-  },
-  {
-    id: 5,
-    title: "Wellness Mobile App",
-    category: "mobile-apps",
-    description: "Health and wellness app with beautiful UI and seamless user experience",
-    image: "https://images.unsplash.com/photo-1541506618330-7c369fc759b5",
-    tools: ["Sketch", "Principle", "After Effects"]
-  },
-  {
-    id: 6,
-    title: "Wireframe & Prototyping",
-    category: "mobile-apps",
-    description: "User flow mapping and low-fidelity wireframes for app development",
-    image: "https://images.unsplash.com/photo-1576153192396-180ecef2a715",
-    tools: ["Figma", "Miro", "FigJam"]
-  },
-  {
-    id: 7,
-    title: "Modern UI Components",
-    category: "brand-identity",
-    description: "Reusable UI component library with consistent design language",
-    image: "https://images.unsplash.com/photo-1699040309386-11c615ed64d5",
-    tools: ["Figma", "React", "Styled Components"]
-  },
-  {
-    id: 8,
-    title: "UX Workshop Series",
-    category: "brand-identity",
-    description: "Educational materials and workshop content for UX design principles",
-    image: "https://images.unsplash.com/photo-1618761714954-0b8cd0026356",
-    tools: ["Keynote", "Illustrator", "Miro"]
-  },
-  {
-    id: 9,
-    title: "Developer Handoff",
-    category: "brand-identity",
-    description: "Design to development workflow with detailed specifications",
-    image: "https://images.pexels.com/photos/248515/pexels-photo-248515.png",
-    tools: ["Figma", "Zeplin", "Abstract"]
+    title: "VOID SYSTEMS",
+    category: "identity",
+    description: "A dark-mode design system for a cybersecurity firm focused on typography.",
+    image: "https://images.unsplash.com/photo-1602576666092-bf6447a729fc",
+    tools: ["FIGMA", "ILLUSTRATOR", "MOTION"]
   }
 ];
 
 export const skills = [
-  { name: "Figma", category: "Design Tools" },
-  { name: "Adobe XD", category: "Design Tools" },
-  { name: "Sketch", category: "Design Tools" },
-  { name: "Framer", category: "Prototyping" },
-  { name: "Protopie", category: "Prototyping" },
-  { name: "Principle", category: "Prototyping" },
-  { name: "After Effects", category: "Animation" },
-  { name: "Lottie", category: "Animation" },
-  { name: "Photoshop", category: "Graphics" },
-  { name: "Illustrator", category: "Graphics" },
-  { name: "User Research", category: "UX" },
-  { name: "Wireframing", category: "UX" },
-  { name: "Usability Testing", category: "UX" },
-  { name: "Design Systems", category: "Systems" },
-  { name: "HTML/CSS", category: "Development" },
-  { name: "React", category: "Development" }
+  { name: "Three.js", category: "Interactive" },
+  { name: "R3F", category: "Interactive" },
+  { name: "GSAP", category: "Motion" },
+  { name: "Framer Motion", category: "Motion" },
+  { name: "Figma", category: "Design" },
+  { name: "Spline", category: "3D Design" },
+  { name: "React", category: "Dev" },
+  { name: "Tailwind", category: "Dev" }
 ];
